@@ -71,6 +71,9 @@
     />
     <van-calendar v-model="showCalendar" @confirm="onCalendarConfirm" />
 
+    <div style="margin: 40px">
+      <span class="dawei">大伟聊前端</span>
+    </div>
     <div class="wrap-name">
       <span class="name">大伟聊前端</span>
     </div>
@@ -122,6 +125,9 @@ export default {
 <style lang="less" scoped>
 .warpper {
   padding-top: 20px;
+  .dawei {
+    font-size: 18px;
+  }
   .wrap-name {
     margin: 40px;
     .name {
