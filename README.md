@@ -2,7 +2,7 @@
 ``` 
    "postcss-px-to-viewport": {
         unitToConvert: 'px',    //需要转换的单位，默认为"px"
-        viewportWidth: 375,     //设计稿的视口宽度，一般是375左右，iphone和很多安卓机等机型都差不多，ipad除外。如果是viewportWidth是375，font-size：14，那么font-size会转换为3.73333vm，计算过程：14÷375×100=3.73333
+        viewportWidth: 375,     //设计稿的视口宽度，一般是375左右，iphone和很多安卓机等机型都差不多，ipad除外。如果是viewportWidth是  375，font-size：14，那么font-size会转换为3.73333vm，计算过程：14÷375×100=3.73333
         unitPrecision: 5,       //单位转换后保留的精度
         propList: ['*'],        //能转化为vw的属性列表
         viewportUnit: 'vw',     //希望使用的视口单位

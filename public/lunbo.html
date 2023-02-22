@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    #container{
+	width:100%;
+	position:relative;
+	overflow:hidden;
+}
+/*占位并保持长宽比*/
+#container:before{
+	content: "";
+	display: inline-block;
+    padding-bottom: 40%;
+    width: .1px;
+    vertical-align: middle;
+}
+#img-list{
+	width: 400%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+	list-style:none;
+}
+#img-list li{
+	width:100%;
+	float:left;
+	position:relative;
+}
+#img-list li img{
+	max-width:100%;
+}
+#pre-btn{
+	width:50px;
+	height:100%;
+	position:absolute;
+	left:0;
+	top:0;
+	z-index:10;
+	cursor: pointer;
+}
+#next-btn{
+	width:50px;
+	height:100%;
+	position:absolute;
+	right:0;
+	top:0;
+	z-index:10;
+	cursor: pointer;
+}
+  </style>
+</head>
+<body>
+  <div id='container'>
+    <ul id='img-list'>
+      <li><img src=''/></li>
+      <li><img src=''/></li>
+      <li><img src=''/></li>
+      <li><img src=''/></li>
+    </ul>
+    <a id='pre-btn'><span></span></a>
+    <a id='next-btn'><span></span></a>
+  </div>
+  <script>
+    window.onload = function () {
+    var container = document.getElementById('container');
+    var img_list = document.getElementById('img-list');
+    var li_list = img_list.getElementsByTagName('li');
+    var pre_btn = document.getElementById('pre_btn');
+    var next_btn = document.getElementById('next_btn');
+    var n = li_list.length;
+    var btn = true;
+
+    //获取元素当前属性值
+    function getStyle(obj, arr) {
+        if (obj.currentStyle) {
+            return obj.currentStyle[arr];  //针对ie
+        } else {
+            return document.defaultView.getComputedStyle(obj, null)[arr];
+        }
+    }
+
+    //自定义的移动函数
+    //obj为节点，json为需要变化的属性，interval为动画间隔（决定帧数），sp可以用来改变变化速度，fn为回调函数
+    function move(obj, json, interval, sp, fn) {
+        clearInterval(obj.timer);
+        obj.timer = setInterval(function () {
+            var flag = true;
+            for (var arr in json) {
+                var icur = 0;
+                if (arr == 'toLeft') {
+                    //获取的**px转化为整型
+                    var icur = parseInt(getStyle(obj, 'left'));
+                }
+                var speed = (json[arr] - icur) * sp;
+                speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+                //判断当前属性值与变化的最终结果是否相等
+                if (icur != json[arr]) {
+                    flag = false;
+                }
+                //一帧的变化值
+                if (arr == "toLeft") {
+                    obj.style.left = (icur + speed) + "px";
+                }
+            }
+            //如果变化完成了的话，调用回调函数
+            if (flag) {
+                clearInterval(obj.timer);
+                if (fn) {
+                    fn();
+                }
+            }
+        }, interval);
+    }
+
+    //点击下一张，把ul第一张复制到尾部，ul左移一个图片宽度，将ul第一张删除，ul的left设置为0（即右移一个图片宽度）
+    next_btn.onclick = function () {
+        if (btn) {
+            btn = false;
+            //第一步复制到尾部
+            var li_first = li_list[0].cloneNode(true);
+            img_list.appendChild(li_first);
+            //第二步ul左移
+            var l = li_list[1].offsetWidth;
+            move(container, {
+                toLeft: -l
+            }, 10, 0.03, function () {
+                container.removeChild(img_list[0]);
+                img_list.style.left = '0px';
+                btn = true;
+            })
+        }
+    }
+
+    //点击上一张，将最后一张复制到ul头部，将ul左移一个图片宽度，最后ul右移至left为0
+    pre_btn.onclick = function () {
+        if (btn) {
+            btn = false;
+            var li_last = li_list[n - 1].cloneNode(true);
+            img_list.insertBefore(li_last, li_list[0]);
+            img_list.style.left = -li_list[1].offsetWidth + 'px';
+            move(img_list, {
+                toLeft: 0
+            }, 10, 0.03, function () {
+                img_list.removeChild(li_list[n]);
+                btn = true;
+            })
+        }
+
+    }
+}
+
+  </script>
+</body>
+</html>
