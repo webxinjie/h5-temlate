@@ -37,6 +37,12 @@ const constantRouterMap = [
         meta: { title: '搜索', keepAlive: false }
       },
       {
+        path: '/svg',
+        name: 'Svg',
+        component: () => import(/* webpackChunkName: "svg" */ '@/views/svg'),
+        meta: { title: '地图标注', keepAlive: false }
+      },
+      {
         path: '/about',
         name: 'About',
         component: () => import(/* webpackChunkName: "home" */ '@/views/home/about'),
